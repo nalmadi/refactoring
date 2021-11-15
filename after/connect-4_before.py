@@ -98,7 +98,6 @@ class Connect4Game(Game):
         returns true if player won
         returns false if player lost
         """
-
         count = 0
 
         # check rows
@@ -107,7 +106,6 @@ class Connect4Game(Game):
             for col in range(len(self.grid[0])):
                 if self.grid[row][col] == player:
                     count += 1
-
                     if count == 4:
                         return True
                 else:
