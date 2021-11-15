@@ -186,18 +186,10 @@ class Connect4Game(Game):
 def main():
     """the main function where the game events take place"""
 
-    # setting up the window
-    # window = make_window("Connect 4", "light sky blue", 800, 600)
-
-    # drawing_turtle
-    # my_turtle = make_turtle('classic', "white", 1, 1, 0, 0 ) # incorproated into the init function
-
     connect4 = Connect4Game()
 
     while True:
         connect4.iterate()
-
-    # window.exitonclick()
 
 
 if __name__ == "__main__":
