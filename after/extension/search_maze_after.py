@@ -1,3 +1,4 @@
+
 import turtle
 import time
 from playsound import playsound
@@ -102,38 +103,6 @@ def find_start(grid):
                 return (row, col)
 
 
-
-def read_grid(file_name):
-    ''' reads a maze file and initializes a gird with its contents '''
-
-    # create an empty grid (an empty list called grid)
-    grid = []
-
-    # open the text file
-    file = open(file_name)
-
-    # read a line from the file
-    line = file.readline()
-
-    # replace \n with nothing
-    line = line.replace('\n', '')
-
-    while line:
-        # split the line into tokens
-        tokens = line.split(',')
-
-        # add the tokens to the grid as a single row
-        grid.append(tokens)
-
-        line = file.readline()
-        
-        # replace \n with nothing
-        line = line.replace('\n', '')
-
-    # return the grid
-    return grid
-
-
 def search_from(grid, row, col):
     ''' recursive function to search the grid for the end (E) '''
 
@@ -228,3 +197,4 @@ if __name__ == "__main__":
     p.start()
     main()
     p.terminate()
+
