@@ -8,41 +8,48 @@ description: simple implementation of the game Pong using python 3 turtles.
 
 import turtle
 
-
-class Paddle:
-    # implements a Pong game paddle
-
-    def __init__(self, x_position, y_position):
-        ''' initializes a paddle with a position '''
-
+class PongObject:
+    def __init__(self, x_position, y_position, myturt):
         self.x_position = x_position
         self.y_position = y_position
-
-        self.turt = make_turtle("square", "white", 5, 1, self.x_position, self.y_position)
-
-
-    def up(self):
-        y = self.turt.ycor()
-        y += 20
-        self.turt.sety(y)
-        self.y_position = y
-
-
-    def down(self):
-        y = self.turt.ycor() #Get the current y coordinate
-        y -= 20             #add 20px could also be y=y+20
-        self.turt.sety(y)    #move the paddle to the new y position
-        self.y_position = y
-
-
+        self.turt = myturt
+        
     def xcor(self):
         ''' returns turtle x_cord '''
         return self.turt.xcor()
 
-    
     def ycor(self):
         ''' returns turtle y_cord '''
         return self.turt.ycor()
+    
+    def setx(self, x_cor):
+        ''' sets x position '''
+        self.turt.setx(x_cor)
+        self.x_position = x_cor
+        
+    def sety (self, y_cor):
+        '''set y position'''
+        self.turt.sety(y_cor)
+        self.y_position = y_cor
+    
+
+class Paddle (PongObject):
+    # implements a Pong game paddle
+
+    def __init__(self, x_position, y_position):
+        ''' initializes a paddle by inheriting PongObject '''
+        turt = make_turtle("square", "white", 5, 1, self.x_position, self.y_position)
+        super().__init__(x_position, y_position, turt)
+
+
+    def up(self):
+        y = self.turt.ycor() + 20
+        self.sety(y)
+
+
+    def down(self):
+        y = self.turt.ycor() -20
+        self.sety(y)
 
 
 
@@ -51,13 +58,13 @@ class Ball:
 
     def __init__(self):
         ''' intializes a ball with default direction and position '''
-
-        self.turt = make_turtle("square", "white", 1, 1, 0, 0)
+        x = 0
+        y = 0
+        turt = make_turtle("square", "white", 1, 1, 0, 0)
+        super().__init__(x, y, turt)
+        
         self.ball_dx = 0.0925 #speed in x direction
         self.ball_dy = 0.0925 #speed in y direction
-        self.x_position = 0
-        self.y_position = 0
-
 
     def move(self):
         ''' moves the ball in x and y directions '''
@@ -78,29 +85,12 @@ class Ball:
             self.turt.sety(-290)
             self.ball_dy *= -1
 
-    
-    def xcor(self):
-        ''' returns turtle x_cord '''
-        return self.turt.xcor()
-
-    
-    def ycor(self):
-        ''' returns turtle y_cord '''
-        return self.turt.ycor()
-
 
     def goto(self, x_pos, y_pos):
         ''' moves ball to new x, y positions '''
         self.turt.goto(x_pos, y_pos)
         self.x_position = x_pos
         self.y_position = y_pos
-
-
-    def setx(self, x_cor):
-        ''' sets the ball x position '''
-        self.turt.setx(x_cor)
-        self.x_position = x_cor
-
 
 
 def make_window(window_title, bgcolor, width, height):
