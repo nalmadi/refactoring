@@ -4,24 +4,6 @@ import time
 from playsound import playsound
 from multiprocessing import Process
 
-# create a turtle and a window for drawing
-if __name__ == "__main__":
-    turt = turtle.Turtle()
-    window = turtle.getscreen()
-    window.bgcolor('slate gray')
-    turtle.hideturtle()
-    turt.hideturtle()
-    turt.shape('square')
-    turt.shapesize(2.5, 2.5)
-
-    # set offsets and tile size for drawing the grid
-    x_offset = -150
-    y_offset = 200
-    tile_size = 50
-
-    # create an int variable for counting steps
-    steps = 0
-
 
 def draw_grid(grid, turt, x_pos, y_pos, tile_size):
     ''' draws a grid at x_pos, y_pos with a specific tile_size '''
@@ -224,6 +206,23 @@ def main():
 
 
 if __name__ == "__main__":
+
+    # creates a window for drawing 
+    turt = turtle.Turtle()
+    window = turtle.getscreen()
+    window.bgcolor('slate gray')
+    turtle.hideturtle()
+    turt.hideturtle()
+    turt.shape('square')
+    turt.shapesize(2.5, 2.5)
+
+    # set offsets and tile size for drawing the grid
+    x_offset = -150
+    y_offset = 200
+    tile_size = 50
+
+    # create an int variable for counting steps
+    steps = 0
 
     p = Process(target=background_music, args=())
     p.start()
