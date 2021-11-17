@@ -1,7 +1,8 @@
 from abc import abstractmethod
 import turtle
 
-def make_window(window_title, bgcolor, width, height):
+
+def make_window(window_title: str, bgcolor: str, width: int, height: int):
     """this function creates a screen object and returns it"""
 
     window = turtle.getscreen()  # Set the window size
@@ -12,7 +13,14 @@ def make_window(window_title, bgcolor, width, height):
     return window
 
 
-def make_turtle(shape, color, stretch_width, stretch_length, x_pos, y_pos):
+def make_turtle(
+    shape: str,
+    color: str,
+    stretch_width: int,
+    stretch_length: int,
+    x_pos: int,
+    y_pos: int,
+):
     """ creates a turtle and sets initial position """
 
     turt = turtle.Turtle()
@@ -23,6 +31,7 @@ def make_turtle(shape, color, stretch_width, stretch_length, x_pos, y_pos):
     turt.penup()
     turt.goto(x_pos, y_pos)  # Start position
     return turt
+
 
 class Game:
     def __init__(self, window, turtle):

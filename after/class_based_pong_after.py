@@ -11,14 +11,15 @@ from game import *
 
 
 class PongGame(Game):
-    def __init__(self,
+    def __init__(
+        self,
         win_w: int = 1200,
         win_h: int = 800,
         win_title: str = "Pong",
         bg_color: str = "black",
     ):
         window = make_window(win_title, bg_color, win_w, win_h)
-        turt = make_turtle("square", "white", 1, 1, 0, int(win_h//2 * 0.85))
+        turt = make_turtle("square", "white", 1, 1, 0, int(win_h // 2 * 0.85))
         super().__init__(window, turt)
 
         # paddels
@@ -27,18 +28,29 @@ class PongGame(Game):
         self.paddle_stretch_h, self.paddle_stretch_w = 5, 1
         self.collision_multiplier = -1.5
 
-
-        self.paddle_1 = Paddle(-int(win_w/2*0.9), 0, self.paddle_stretch_h, self.paddle_stretch_w, paddle_speed)
-        self.paddle_2 = Paddle(int(win_w/2*0.9), 0, self.paddle_stretch_h, self.paddle_stretch_w, paddle_speed)
+        self.paddle_1 = Paddle(
+            -int(win_w / 2 * 0.9),
+            0,
+            self.paddle_stretch_h,
+            self.paddle_stretch_w,
+            paddle_speed,
+        )
+        self.paddle_2 = Paddle(
+            int(win_w / 2 * 0.9),
+            0,
+            self.paddle_stretch_h,
+            self.paddle_stretch_w,
+            paddle_speed,
+        )
 
         self.paddles = [self.paddle_1, self.paddle_2]
         self.scores = [0, 0]
 
         # ball
-        self.ball = Ball(1, 1, 0, 0, ball_x_speed, ball_y_speed, int(win_h//2 * 0.85))
+        self.ball = Ball(1, 1, 0, 0, ball_x_speed, ball_y_speed, int(win_h // 2 * 0.85))
 
         # Pen
-        self.font_size = int(win_h//2 * 0.1)
+        self.font_size = int(win_h // 2 * 0.1)
         self.draw_score_board()
         self.turt.hideturtle()
 
@@ -61,34 +73,36 @@ class PongGame(Game):
         self.ball.goto(0, 0)
         self.ball.ball_dx *= -1
 
-    def check_border(self, player):
+    def check_border(self, player: int):
         if (self.paddles[player].xcor() < 0) == (self.ball.xcor() < 0) and abs(
             self.ball.xcor()
         ) > abs(self.paddles[player].xcor()):
             return True
 
-    def handle_border(self, player):
+    def handle_border(self, player: int):
         self.scores[1 - player] += 1
         self.draw_score_board()
         self.reset_ball()
 
-    def check_paddle_collision(self, player):
+    def check_paddle_collision(self, player: int):
         if (
             (self.paddles[player].xcor() < 0) == (self.ball.xcor() < 0)
-            and abs(self.paddles[player].xcor()) - 10*self.paddle_stretch_w
+            and abs(self.paddles[player].xcor()) - 10 * self.paddle_stretch_w
             < abs(self.ball.xcor())
             < abs(self.paddles[player].xcor())
-            and self.ball.ycor() < self.paddles[player].ycor() + 10*self.paddle_stretch_h
-            and self.ball.ycor() > self.paddles[player].ycor() - 10*self.paddle_stretch_h
+            and self.ball.ycor()
+            < self.paddles[player].ycor() + 10 * self.paddle_stretch_h
+            and self.ball.ycor()
+            > self.paddles[player].ycor() - 10 * self.paddle_stretch_h
         ):
             return True
         return False
 
-    def handle_paddle_collision(self, player):
+    def handle_paddle_collision(self, player: int):
         if self.paddles[player].xcor() > 0:
-            self.ball.setx(self.paddles[player].xcor() - 10*self.paddle_stretch_w)
+            self.ball.setx(self.paddles[player].xcor() - 10 * self.paddle_stretch_w)
         else:
-            self.ball.setx(self.paddles[player].xcor() + 10*self.paddle_stretch_w)
+            self.ball.setx(self.paddles[player].xcor() + 10 * self.paddle_stretch_w)
         self.ball.ball_dx *= self.collision_multiplier
 
     def iterate(self):
@@ -108,8 +122,9 @@ class PongGame(Game):
         while True:
             game.iterate()
 
+
 class PongObject:
-    def __init__(self, x_position, y_position, myturt):
+    def __init__(self, x_position: int, y_position: int, myturt):
         self.x_position = x_position
         self.y_position = y_position
         self.turt = myturt
@@ -122,12 +137,12 @@ class PongObject:
         """ returns turtle y_cord """
         return self.turt.ycor()
 
-    def setx(self, x_cor):
+    def setx(self, x_cor: int):
         """ sets x position """
         self.turt.setx(x_cor)
         self.x_position = x_cor
 
-    def sety(self, y_cor):
+    def sety(self, y_cor: int):
         """set y position"""
         self.turt.sety(y_cor)
         self.y_position = y_cor
@@ -136,10 +151,19 @@ class PongObject:
 class Paddle(PongObject):
     # implements a Pong game paddle
 
-    def __init__(self, x_position: int, y_position: int, w_stretch: int, h_stretch: int, move_speed: int):
+    def __init__(
+        self,
+        x_position: int,
+        y_position: int,
+        w_stretch: int,
+        h_stretch: int,
+        move_speed: int,
+    ):
         """ initializes a paddle by inheriting PongObject """
         self.move_speed = move_speed
-        turt = make_turtle("square", "white", w_stretch, h_stretch, x_position, y_position)
+        turt = make_turtle(
+            "square", "white", w_stretch, h_stretch, x_position, y_position
+        )
         super(Paddle, self).__init__(x_position, y_position, turt)
 
     def up(self):
@@ -154,16 +178,27 @@ class Paddle(PongObject):
 class Ball(PongObject):
     # implements a Pong game ball
 
-    def __init__(self, w_stretch, h_stretch, x_position, y_position, x_speed, y_speed, x_extent):
+    def __init__(
+        self,
+        w_stretch: int,
+        h_stretch: int,
+        x_position: int,
+        y_position: int,
+        x_speed: int,
+        y_speed: int,
+        x_extent: int,
+    ):
         """ intializes a ball with default direction and position """
-        turt = make_turtle("square", "white", w_stretch, h_stretch, x_position, y_position)
+        turt = make_turtle(
+            "square", "white", w_stretch, h_stretch, x_position, y_position
+        )
 
         super(Ball, self).__init__(x_position, y_position, turt)
 
         self.ball_dx = x_speed  # speed in x direction
         self.ball_dy = y_speed  # speed in y direction
 
-        self.x_extent = x_extent    
+        self.x_extent = x_extent
 
     def move(self):
         """ moves the ball in x and y directions """
@@ -184,20 +219,17 @@ class Ball(PongObject):
             self.turt.sety(-self.x_extent)
             self.ball_dy *= -1
 
-    def goto(self, x_pos, y_pos):
+    def goto(self, x_pos: int, y_pos: int):
         """ moves ball to new x, y positions """
         self.turt.goto(x_pos, y_pos)
         self.x_position = x_pos
         self.y_position = y_pos
 
 
-
-
 def main():
     """ the main function where the game events take place """
-    game = PongGame()
-    while True:
-        game.iterate()
+
+    PongGame.play_game()
 
 
 if __name__ == "__main__":

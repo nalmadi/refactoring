@@ -19,22 +19,19 @@ class Connect4Game(Game):
         win_h: int = 900,
         win_title: str = "Connect 4",
         bg_color: str = "light sky blue",
-        grid_h: int = 5,
-        grid_w: int = 7,
-        connect_n: int = 4,
-        turn: int = 1,
     ):
 
-        self.grid_h, self.grid_w = grid_h, grid_w
-        self.connect_n = connect_n
-        self.turn = turn
+        self.grid_h, self.grid_w = 5, 7
+        self.connect_n = 4
+        self.turn = 1
+
+        self.dot_colors = {1: "red", 2: "yellow", 0: "white"}
 
         window = make_window(win_title, bg_color, win_w, win_h)
         turt = make_turtle("classic", "white", 1, 1, 0, 0)
         super().__init__(window, turt)
 
         self.tile_size = min(win_w // 16, win_h // 12)
-        self.dot_colors = {1: "red", 2: "yellow", 0: "white"}
         self.dot_size = int(0.9 * self.tile_size)
         self.x_offset = int(-self.tile_size * self.grid_w / 2)
         self.y_offset = win_h - int(self.tile_size * (self.grid_h + 3))
@@ -130,19 +127,20 @@ class Connect4Game(Game):
         elif self.check_win(2):
             print("player 2 won")
 
+    def make_move(self, row: int, col: int):
+        if self.grid[row][col] == 0:
+            self.grid[row][col] == self.turn
+            self.print_winner()
+            self.switch_turn()
+
     def iterate(self):
         """inside the while loop to keep the game playing"""
         selected_row = int(input("enter row, player " + str(self.turn) + ": "))
         selected_col = int(input("enter col, player " + str(self.turn) + ": "))
 
-        if self.grid[selected_row][selected_col] == 0:
-            self.grid[selected_row][selected_col] = self.turn
-
+        self.make_move(selected_row, selected_col)
         self.draw_grid()
         self.window.update()
-
-        self.print_winner()
-        self.swtich_turn()
 
     def play(self, x_pos: float, y_pos: float):
         """updates the grid in playing"""
@@ -154,11 +152,7 @@ class Connect4Game(Game):
         )
         print(row, col)
 
-        if self.grid[row][col] == 0:
-            self.grid[row][col] = self.turn
-            self.print_winner()
-            self.swtich_turn()
-
+        self.make_move(row, col)
         self.draw_grid()
         self.window.update()
 
@@ -169,13 +163,17 @@ class Connect4Game(Game):
         else:
             self.turn = 1
 
+    @staticmethod
+    def play_game():
+        game = Connect4Game()
+        while True:
+            game.iterate()
+
 
 def main():
     """the main function where the game events take place"""
 
-    connect4 = Connect4Game(1200, 900)
-    while True:
-        connect4.iterate()
+    Connect4Game.play_game()
 
 
 if __name__ == "__main__":
