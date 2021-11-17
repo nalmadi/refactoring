@@ -8,8 +8,7 @@ Luhang Sun & Dhruv Joshi
 
 # Extension:
 
-- Apply refactoring to “search_maze_before.py”
-- Apply refactoring to your implementation of Sudoku from CS231.
-- Apply refactoring any code that you wrote previously.
+- Complete and in-depth cleanup/refactoring of hard-coded numbers in the above two python games!
+-  Apply refactoring to “search_maze_before.py”
 
 
