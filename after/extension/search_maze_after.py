@@ -5,7 +5,7 @@ from multiprocessing import Process
 
 
 class SearchMaze:
-    """switch to SearchMaze"""
+    """SearchMaze Game class"""
 
     def __init__(self):
         self.turt = turtle.Turtle()
@@ -197,11 +197,9 @@ class SearchMaze:
 
         # read maze file and create playground grid
         self.set_grid(grid_file)
-        print("SET GRID FINISH")
 
         # find start position
         row, col = self.find_start()
-        print(row, col)
 
         # call the search function, it takes row and column
         self.search_from(row, col)
