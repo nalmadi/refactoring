@@ -1,0 +1,4 @@
+base F+F-F
+rule F F[FF+FF<gL>-]
+rule + [F]-[F]
+rule - F[F]
