@@ -43,7 +43,7 @@ class Ball:
 
     def __init__(self):
         ''' intializes a ball with default direction and position '''
-        self.ball_dx = 0.6 #speed in x direction
+        self.ball_dx = 0.0925 #speed in x direction
         self.ball_dy = 0.0925 #speed in y direction
         self.x_position = 0
         self.y_position = 0
@@ -76,24 +76,42 @@ class Ball:
 
     def set_ycor(self, new_y):
         '''set turtle y_cor helper function for bounce_off_window'''
-        return self.ball.get_turtle().sety(new_y)
+        return self.ball.teleport(self.get_ball_xcor(),new_y)
+
+    def set_xcor(self, new_x):
+        '''set turtle x_cor helper function for bounce_off_paddle'''
+        return self.ball.teleport(new_x, self.get_ball_ycor())
 
     def bounce_off_window(self):
         ''' Checks if ball is out of bounds and "bounces" the ball off the window'''
         y_pos = self.get_ball_ycor()
         if y_pos > 290:
-            self.sety(290)
+            self.set_ycor(290)
             self.ball_dy *= -1
 
         elif y_pos < -290:
-            self.sety(-290)
+            self.set_ycor(-290)
             self.ball_dy *= -1
+
+    def bounce_off_paddle(self):
+        ''' Checks which side the ball is on and "bounces" the ball off the paddle'''
+        x_pos = self.get_ball_xcor()
+        if x_pos > 330:
+            self.set_xcor(329)
+            self.ball_dx *= -1.5
+
+        elif x_pos < -330:
+            self.set_xcor(-329)
+            self.ball_dx *= -1.5
 
     def goto(self, x_pos, y_pos):
         ''' moves ball to new x, y positions '''
         self.ball.teleport(x_pos, y_pos)
         self.x_position = x_pos
         self.y_position = y_pos
+
+    
+
 
 
 class PongWindow:
@@ -102,13 +120,16 @@ class PongWindow:
         self.window = self.turt.make_window(title)
         # display words on window
         self.turt.teleport(0, 260)
+        self.turt.turtle_style("square")
         self.pen = self.turt.get_turtle()
-        self.pen.hideturtle()
 
     def display_score(self, score):
+        self.turt.teleport(0, 260)
         self.pen.clear()
         font = ("Courier", 24, "normal")
         self.pen.write(score, align="center", font = font)
+        self.pen.hideturtle()
+
 
     def get_window(self):
         return self.window
@@ -142,24 +163,25 @@ class Pong:
     def display_score(self):
         player1Score = str(self.score_player1)
         player2Score = str(self.score_player2)
+        print(f"Player A: {player1Score}  Player B: {player2Score}")
         self.pong.display_score(f"Player A: {player1Score}  Player B: {player2Score}")
 
     
     def point_scored_left(self):
         self.score_player1 += 1
-        self.display_score
+        self.display_score()
         self.ball.goto(0, 0)
-        self.ball.ball_dx *= 1
+        self.ball.ball_dx = -.0925
 
     def point_scored_right(self):
         self.score_player2 += 1
-        self.display_score
+        self.display_score()
         self.ball.goto(0, 0)
-        self.ball.ball_dx *= -1
+        self.ball.ball_dx = .0925
 
     def check_point_scored(self):
-        left_bound = -350
-        right_bound = 350
+        left_bound = -360
+        right_bound = 360
         ball_x_pos = self.ball.get_ball_xcor()
         if ball_x_pos > right_bound:
             self.point_scored_left()
@@ -168,27 +190,26 @@ class Pong:
             self.point_scored_right()
 
     def collisionLeftPaddle(self):
-        ballPaddle_x_intercept = self.ball.xcor() < -340 and self.ball.xcor() > -350
-        ballPaddle_y_intercept = self.ball.ycor() < self.paddle_1.ycor() + 50 and self.ball.ycor() > self.paddle_1.ycor() - 50
+        ballPaddle_x_intercept = (self.ball.get_ball_xcor() < -340)
+        ballPaddle_y_intercept = (self.ball.get_ball_ycor() < self.paddle_1.get_paddle_ycor() + 50) and (self.ball.get_ball_ycor() > self.paddle_1.get_paddle_ycor() - 50)
         if ballPaddle_x_intercept and ballPaddle_y_intercept:
-            self.ball.setx(-340)
-            self.ball.ball_dx *= -1.5
+            self.ball.bounce_off_paddle()
 
     def collisionRightPaddle(self):
-        ballPaddle_x_intercept = self.ball.xcor() > 340 and self.ball.xcor() < 350
-        ballPaddle_y_intercept = self.ball.ycor() < self.ball.ycor() < self.paddle_2.ycor() + 50 and self.ball.ycor() > self.paddle_2.ycor() - 50
+        ballPaddle_x_intercept = (self.ball.get_ball_xcor() > 340)
+        ballPaddle_y_intercept = (self.ball.get_ball_ycor() < self.paddle_2.get_paddle_ycor() + 50) and (self.ball.get_ball_ycor() > self.paddle_2.get_paddle_ycor() - 50)
         if ballPaddle_x_intercept and ballPaddle_y_intercept:
-            self.ball.setx(340)
-            self.ball.ball_dx *= -1.5
+            self.ball.bounce_off_paddle()
 
     def collisions(self):
-        self.CollisionLeftPaddle()
-        self.CollisionRightPaddle()
+        self.collisionLeftPaddle()
+        self.collisionRightPaddle()
 
     def run(self):
         while True:
             self.window.update() #This is the update to offset the wn.tracer(0)
             self.ball.move()
+            self.collisions()
             self.check_point_scored()
 
 def main():
